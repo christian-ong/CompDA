@@ -1,0 +1,20 @@
+### IDEAS
+Missing vals
+* If we just take mean, probably standardize first (cuz of std)
+
+
+Data comprehension
+* Compute the covariance matrix
+* PCA / SVD
+
+
+Models
+* KNN
+* OLS + basis exp
+* Regularization (ridge, lasso, elastic)
+* QDA (other non-lin)
+* Sparse DA
+
+
+Model selection
+* AIC =ish leave-one-out (BIC only for n>>p)
