@@ -1,4 +1,9 @@
-### IDEAS
+### Questions
+* Should we fillna inside or outside CV loop?
+* Are we allowed to use X_new to train on? (KNN fillna, etc.)
+
+
+### Ideas
 Missing vals
 * If we just take mean, probably standardize first (cuz of std)
 
