@@ -32,3 +32,12 @@ def clean_data(x, fill_type='simple'):
     x1 = (x1 - x1.mean()) / x1.std()
     
     return x1
+
+
+def bootstrap(X, N=None):
+    """ Bootstrap resampling """
+    if N is None:
+        N = X.shape[0]
+    idx = np.random.randint(0, X.shape[0], N)
+    X_boot = X.iloc[idx, :]
+    return X_boot

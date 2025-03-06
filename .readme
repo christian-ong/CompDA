@@ -15,12 +15,15 @@ Data clean / visualize
 
 
 Models
-* KNN
-* Random forest
+* Simple
+    * KNN
+    * Random forest
+    * Linear (statistical)
 * OLS + basis exp
 * Regularization (ridge, lasso, elastic)
 * QDA (other non-lin)
 * Sparse DA
+* Squared variables
 
 
 Model selection
