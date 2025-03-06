@@ -24,10 +24,12 @@ Models
 * Regularization (ridge, lasso, elastic)
 * QDA (other non-lin)
 * Sparse DA
-* Squared variables
+* Squared variables !!
 
 
 Model selection
+* Find out which coeff lasso (etc.) uses 
+* Optimize parameters
 * AIC = leave-one-out-ish (BIC only for n>>p)
 
 
