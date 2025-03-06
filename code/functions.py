@@ -2,13 +2,13 @@ import numpy as np
 import pandas as pd
 from sklearn.impute import KNNImputer
 
-def clean_data(x, fill_type='simple'):
+def clean_data(df, fill_type='simple'):
     """ Fill missing values, standardize """
 
-    assert fill_type in ['simple','knn']
+    assert fill_type in ['none', 'simple','knn']
     
     # Drop columns
-    x1 = x.drop(columns=['C_02']) # remove C_02, since it is a constant
+    x1 = df.drop(columns=['C_02']) # remove C_02, since it is a constant
 
     # Fill missing values
     if fill_type == 'simple':

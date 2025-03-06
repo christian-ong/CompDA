@@ -12,6 +12,7 @@ Data clean / visualize
 * Categorical variables: One-hot-encoding
 * Compute the covariance matrix
 * PCA / SVD
+* Throw out useless variables
 
 
 Models
@@ -27,7 +28,7 @@ Models
 
 
 Model selection
-* AIC =ish leave-one-out (BIC only for n>>p)
+* AIC = leave-one-out-ish (BIC only for n>>p)
 
 
 Optimize models
