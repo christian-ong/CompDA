@@ -42,3 +42,8 @@ Error estimation + Hyper parameters
 * Double nested leave-one-out (validation + test)
     * Inner LOO: (val + train) to determine hyperparamters
     * Outer LOO: (valtrain + test) to determine error
+
+Plots
+* Overfitting: train error vs test error
+* Plot hyper parameter
+    * After finding optimal set of hyper parameters, vary one at a time and plot loss
