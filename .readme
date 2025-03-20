@@ -14,24 +14,31 @@ Data clean / visualize
 * PCA / SVD
 * Throw out useless variables
 
-
-Models
-* Simple
+Models2
+* Other points
+    * Hyper parameter tuning
+    * How many PCs?
+    * Squared variables (basis expansion)
+* Models
     * KNN
     * Random forest
-    * Linear (statistical)
-* OLS + basis exp
-* Regularization (ridge, lasso, elastic)
-* QDA (other non-lin)
-* Sparse DA
-* Squared variables !!
+        * No need for PCA
+
+Workflows (final models)
+* (Std + PCA) + basis exp + ElasticNet
+* (Basis exp) + Random Forest
+* KernelSVM
 
 
 Model selection
 * Find out which coeff lasso (etc.) uses 
-* Optimize parameters
 * AIC = leave-one-out-ish (BIC only for n>>p)
 
 
 Optimize models
-* Bagging
+* Weight tuning: Bagging
+
+Error estimation + Hyper parameters
+* Double nested leave-one-out (validation + test)
+    * Inner LOO: (val + train) to determine hyperparamters
+    * Outer LOO: (valtrain + test) to determine error
