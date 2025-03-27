@@ -2,10 +2,10 @@ import numpy as np
 import pandas as pd
 from sklearn.impute import KNNImputer
 
-def clean_data(df, standardize=False, fill_type='simple', one_hot=False):
+def clean_data(df, standardize=False, fill_type=None, one_hot=False):
     """ Fill missing values, standardize, one-hot encode """
 
-    assert fill_type in ['none', 'simple','knn']
+    assert fill_type in [None, 'simple','knn']
     
     # Drop columns
     x1 = df.drop(columns=['C_02']) # remove C_02, since it is a constant
@@ -24,7 +24,8 @@ def clean_data(df, standardize=False, fill_type='simple', one_hot=False):
         x1 = imputer.fit_transform(x1)
         x1[:, -5:] = np.round(x1[:, -5:]) # round categorical features
         x1 = pd.DataFrame(x1, columns=col_names)
-
+    elif fill_type == None:
+        pass
     if standardize:
         x1 = (x1 - x1.mean()) / x1.std()
     
