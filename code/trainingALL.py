@@ -20,8 +20,9 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.model_selection import train_test_split
 import functions as f
 import os
-#print working directory
-print(os.getcwd())
+
+# #print working directory
+# print(os.getcwd())
 
 # Get directory of the current script
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -63,7 +64,7 @@ models = {
     "ElasticNet": make_pipeline(preprocessor, PCA(), ElasticNet()),
     "SVR": make_pipeline(preprocessor, PCA(), SVR()),
     "RandomForest": make_pipeline(preprocessor, RandomForestRegressor(random_state=42)),  # No pipeline needed
-    "KNN": make_pipeline(preprocessor, PCA(), KNeighborsRegressor())
+    "KNN": make_pipeline(preprocessor, KNeighborsRegressor()) # PCA(),
 }
 
 # Define hyperparameter grids
@@ -71,30 +72,30 @@ param_grids = {
     # "OLS": {'pca__n_components': [60, 70], 'columntransformer__num__imputer__n_neighbors': [5, 10]},
     # "Ridge": {'pca__n_components': [60, 70], 'ridge__alpha': [0.1, 1], 'columntransformer__num__imputer__n_neighbors': [5, 10]},
     # "Lasso": {'pca__n_components': [30, 37], 'lasso__alpha': [0.1, 1], 'columntransformer__num__imputer__n_neighbors': [5, 10]},
-    "ElasticNet": {'pca__n_components': [50, 60, 70, 79], 
-                   'elasticnet__alpha': [1e-4, 1e-3, 0.1, 1], 
+    "ElasticNet": {'pca__n_components': [60, 62, 63], 
+                   'elasticnet__alpha': [1e-2, 3e-2, 5e-2], 
                    'elasticnet__l1_ratio': [0.1, 0.5, 0.7, 0.9], 
-                   'columntransformer__num__imputer__n_neighbors': [3, 5, 10, 15],
-                   'columntransformer__cat__imputer__n_neighbors': [3, 5, 10, 15]},
+                   'columntransformer__num__imputer__n_neighbors': [4, 6, 8, 10],
+                   'columntransformer__cat__imputer__n_neighbors': [1, 2, 3, 5]},
 
-    "SVR": {'pca__n_components': [50, 60, 70, 79], 
-            'svr__C': [1e-4, 1e-3, 0.1, 1], 
-            'svr__epsilon': [1e-3, 0.1, 1], 
+    "SVR": {'pca__n_components': [60, 62, 63], 
+            'svr__C': [6, 7, 8, 9, 10], 
+            'svr__epsilon': [0.1, 1, 2, 3], 
             'svr__kernel': ['linear', 'rbf'], 
-            'columntransformer__num__imputer__n_neighbors': [5, 10, 15, 20],
-            'columntransformer__cat__imputer__n_neighbors': [3, 5, 10, 15]},
+            'columntransformer__num__imputer__n_neighbors': [4, 6, 8, 10],
+            'columntransformer__cat__imputer__n_neighbors': [1, 2, 3, 5]},
 
-    "RandomForest": {'randomforestregressor__n_estimators': [10, 30, 50, 100],
-                     'columntransformer__num__imputer__n_neighbors': [5, 10, 15, 20], 
-                     'randomforestregressor__max_depth': [3, 5, 10, 20], 
-                     'randomforestregressor__min_samples_split': [2, 5],
-                     'columntransformer__cat__imputer__n_neighbors': [3, 5, 10, 15]},
+    "RandomForest": {'randomforestregressor__n_estimators': [45, 50, 55, 60], #best params found
+                     'columntransformer__num__imputer__n_neighbors': [23, 24, 25, 26], 
+                     'randomforestregressor__max_depth': [4, 5, 6, 7], 
+                     'randomforestregressor__min_samples_split': [3, 4, 5, 6],
+                     'columntransformer__cat__imputer__n_neighbors': [1, 2, 3, 4]},
 
-    "KNN": {'pca__n_components': [50, 60, 70, 79], 
-            'kneighborsregressor__n_neighbors': [3, 5, 10, 15, 20], 
-            'kneighborsregressor__weights': ['uniform', 'distance'], 
-            'columntransformer__num__imputer__n_neighbors': [5, 10, 15, 20],
-            'columntransformer__cat__imputer__n_neighbors': [3, 5, 10, 15]}
+    "KNN": {#'pca__n_components': [38, 40, 41, 42], pca perf: 64,94,  without perf: 64,62
+            'kneighborsregressor__n_neighbors': [1, 5, 6, 7, 8], # [3, 5, 6, 7, 9] WITH PCA
+            'kneighborsregressor__weights': ['uniform', 'distance'], #['uniform', 'distance'] WITH PCA
+            'columntransformer__num__imputer__n_neighbors': [13, 14, 15, 16], #[7, 8, 9, 10] WITH PCA
+            'columntransformer__cat__imputer__n_neighbors': [1, 2, 3, 4]} # [1, 2, 3, 4] WITH PCA
 }
 
 # Outer Loop: Leave-One-Out Cross-Validation
@@ -102,7 +103,7 @@ loo = LeaveOneOut()
 KFcv = KFold(n_splits=5, shuffle=True, random_state=42)
 final_rmse_scores = {model: [] for model in models}
 
-for train_index, test_index in loo.split(X):
+for i, (train_index, test_index) in enumerate(loo.split(X)):
     X_train, X_test = X.iloc[train_index], X.iloc[test_index]
     y_train, y_test = y.iloc[train_index], y.iloc[test_index]
 
@@ -136,9 +137,17 @@ for train_index, test_index in loo.split(X):
         # Store RMSE for this fold
         final_rmse_scores[model_name].append(rmse)
 
+    #print progress
+    print(f"Finished iteration {i+1}/{KFcv.get_n_splits()}")
+
 # Compute mean RMSE across all LOO iterations
 for model, scores in final_rmse_scores.items():
     print(f"{model}: Mean RMSE across LOO = {np.mean(scores):.4f}")
+
+
+# print best params
+for model, params in best_params.items():
+    print(f"{model}: Best params = {params}") 
 
 
 # Find the best model and its parameters
@@ -146,7 +155,8 @@ best_model_name = min(final_rmse_scores, key=lambda model: np.mean(final_rmse_sc
 final_model = models[best_model_name]
 
 # Predict `X_new`
-X_new = pd.read_csv("../../data/case1Data_Xnew.csv") #data cleaning?
+X_new_path = os.path.join(DATA_DIR, "case1Data_Xnew.csv")
+X_new = pd.read_csv(X_new_path)
 X_new = f.clean_data(X_new, fill_type=None, one_hot=False)
 
 # Train the best model on the full dataset (since LOO already ensured a fair RMSE estimate)
